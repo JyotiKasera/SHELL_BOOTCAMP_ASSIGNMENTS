@@ -1,0 +1,102 @@
+Create table author(
+    authorid int primary key,
+    firstname varchar(50),
+    lastname varchar(50),
+    dateofbirth date,
+    nationality varchar(20)
+);
+create table publisher(
+    publisherid int primary key,
+    name varchar(100),
+    location varchar(100)
+);
+CREATE TABLE Customer (
+ CustomerID INT PRIMARY KEY,
+ FirstName VARCHAR(50),
+ LastName VARCHAR(50),
+ Email VARCHAR(100),
+ PhoneNumber VARCHAR(20),
+ Address VARCHAR(200)
+);
+CREATE TABLE Book (
+ ISBN VARCHAR(20) PRIMARY KEY,
+ Title VARCHAR(200),
+ Genre VARCHAR(50),
+ PublicationYear INT,
+ Price DECIMAL(10, 2),
+ PublisherID INT,
+ FOREIGN KEY (PublisherID) REFERENCES Publisher(PublisherID)
+);
+CREATE TABLE [Order] (
+ OrderID INT PRIMARY KEY,
+ OrderDate DATE,
+ TotalAmount DECIMAL(10, 2),
+ CustomerID INT,
+ FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+CREATE TABLE BookAuthor (
+ ISBN VARCHAR(20),
+ AuthorID INT,
+ PRIMARY KEY (ISBN, AuthorID),
+ FOREIGN KEY (ISBN) REFERENCES Book(ISBN),
+ FOREIGN KEY (AuthorID) REFERENCES Author(AuthorID)
+);
+CREATE TABLE OrderBook (
+ OrderID INT,
+ ISBN VARCHAR(20),
+ PRIMARY KEY (OrderID, ISBN),
+ FOREIGN KEY (OrderID) REFERENCES [Order](OrderID),
+ FOREIGN KEY (ISBN) REFERENCES Book(ISBN)
+);
+INSERT INTO Author (AuthorID, FirstName, LastName, DateOfBirth, Nationality)
+VALUES
+ (1, 'J.K.', 'Rowling', '1965-07-31', 'British'),
+ (2, 'George', 'Orwell', '1903-06-25', 'British')
+Query: Select * from Author;
+INSERT INTO Publisher (PublisherID, Name, Location)
+VALUES
+ (1, 'Penguin Books', 'London'),
+ (2, 'HarperCollins', 'New York')
+Select * from Publisher;
+INSERT INTO Customer (CustomerID, FirstName, LastName, Email, PhoneNumber, 
+Address)
+VALUES
+ (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '123 Main St'),
+ (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '456 Elm St')
+Select * from Customer;
+INSERT INTO Book (ISBN, Title, Genre, PublicationYear, Price, PublisherID)
+VALUES
+ ('978-0-553-21311-0', 'Harry Potter and the Sorcerer''s Stone', 'Fantasy', 1997, 19.99, 1),
+ ('978-0-452-28423-4', '1984', 'Dystopian', 1949, 12.99, 2)
+select * from book;
+INSERT INTO [Order] (OrderID, OrderDate, TotalAmount, CustomerID)
+VALUES
+ (1, '2023-08-01', 33.98, 1),
+ (2, '2023-08-15', 12.99, 2)
+Select * from [Order];
+INSERT INTO BookAuthor (ISBN, AuthorID)
+VALUES
+ ('978-0-553-21311-0', 1),
+ ('978-0-452-28423-4', 2)
+Select * from BookAuthor;
+INSERT INTO OrderBook (OrderID, ISBN)
+VALUES
+ (1, '978-0-553-21311-0'),
+ (2, '978-0-452-28423-4')
+Select * from OrderBook;
+GRANT SELECT ON Author TO dbo;
+REVOKE SELECT ON Author FROM dbo;
+UPDATE Book SET Price = 24.99 WHERE ISBN = '978-0-553-21311-0';
+Select * from book;
+TRUNCATE TABLE OrderBook;
+SELECT * FROM Book WHERE Price > 15.00;
+SELECT * FROM Customer WHERE Address LIKE '%Main St%';
+SELECT CustomerID, SUM(TotalAmount) AS TotalSales
+FROM [Order]
+GROUP BY CustomerID;
+SELECT CustomerID, SUM(TotalAmount) AS TotalPurchases
+FROM [Order]
+GROUP BY CustomerID
+HAVING SUM(TotalAmount) > 30.00;
+SELECT * FROM Book ORDER BY Title;
+SELECT * FROM Customer ORDER BY LastName DESC;
